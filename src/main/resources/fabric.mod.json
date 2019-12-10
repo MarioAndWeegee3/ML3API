@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "ml3api",
+  "version": "${version}",
+
+  "name": "ML3API",
+  "description": "MarioAndWeegee3's API",
+  "authors": [
+    "MarioAndWeegee3"
+  ],
+  "contact": {
+    "homepage": "https://marioandweegee3.github.io"
+  },
+
+  "license": "",
+  "icon": "assets/ml3api/logo.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "marioandweegee3.ml3api.LibMain"
+    ]
+  },
+  "mixins": [
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.4.0"
+  },
+  "suggests": {
+    "flamingo": "*"
+  }
+}
