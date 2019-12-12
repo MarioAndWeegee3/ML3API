@@ -3,18 +3,16 @@ package marioandweegee3.ml3api;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import marioandweegee3.ml3api.config.Config;
 import marioandweegee3.ml3api.config.ConfigManager;
+import marioandweegee3.ml3api.registry.RegistryHelper;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.util.Identifier;
 
 public class LibMain implements ModInitializer {
-    public static final Logger logger = LogManager.getLogger();
+    public static final Gson gson = new GsonBuilder().registerTypeAdapter(Config.class, new Config.Builder().build()).setPrettyPrinting().create();
 
-    public static final Gson gson = new GsonBuilder().registerTypeAdapter(Config.class, new Config()).setPrettyPrinting().create();
+    public static final RegistryHelper helper = new RegistryHelper("ml3api");
 
     public static Config test;
 
@@ -25,6 +23,8 @@ public class LibMain implements ModInitializer {
         }).add("identifier", new Identifier("stone")).add("inner", new TestClass()).build());
 
         test = ConfigManager.INSTANCE.getConfig(new Identifier("ml3lib:test"));
+
+        helper.log(test.toString());
     }
 
     static class TestClass {

@@ -13,50 +13,94 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
-public class RegistryHelper{
+/**
+ * Helps with registering Items
+ */
+public final class RegistryHelper {
     private final String modid;
 
     public final Logger logger;
 
+    /**
+     * Initialize a new RegistryHelper
+     * @param modid The mod's id. Can be any string that works in {@link Identifier}
+     */
     public RegistryHelper(String modid){
         this.modid = modid;
         this.logger = LogManager.getLogger(modid);
     }
 
+    /**
+     * Logs the message with the included {@link Logger}
+     * @param message The message to log
+     */
     public void log(String message){
-        logger.info(message);
+        logger.info("["+modid+"] "+message);
     }
 
+    /**
+     * @return The mod id passed in the constructor
+     */
     public String getMod(){
         return modid;
     }
 
+    /**
+     * Makes an {@link Identifier} for the given string, using the modid
+     * @param name The path for the new {@link Identifier}
+     * @return An {@link Identifier} with the given path and {@link #modid} as the namespace
+     */
     public Identifier makeId(String name){
         return new Identifier(modid, name);
     }
 
-    public void registerAll(Map<String, Item> map){
+    /**
+     * Registers all {@link Item}s in the given {@link Map}
+     * @param map A map of the item names and {@link Item}s
+     */
+    public void registerAllItems(Map<String, Item> map){
         for(Map.Entry<String, Item> entry : map.entrySet()){
-            register(entry.getKey(), entry.getValue());
+            registerItem(entry.getKey(), entry.getValue());
         }
     }
 
-    public void registerAll(Map<String, Block> map, ItemGroup group){
+    /**
+     * Registers all {@link Block}s in the given {@link Map}
+     * @param map A map of the item names and {@link Block}s
+     * @param group The {@link ItemGroup} used when registering the {@link BlockItem}s
+     */
+    public void registerAllBlocks(Map<String, Block> map, ItemGroup group){
         for(Map.Entry<String, Block> entry : map.entrySet()){
-            register(entry.getKey(), entry.getValue(), group);
+            registerBlock(entry.getKey(), entry.getValue(), group);
         }
     }
 
-    public void register(String name, Item item){
+    /**
+     * Registers the given {@link Item} in the appropriate {@link Registry}
+     * @param name The name of the {@link Item}
+     * @param item The {@link Item}
+     */
+    public void registerItem(String name, Item item){
         Registry.ITEM.add(makeId(name), item);
     }
 
-    public void register(String name, Block block, ItemGroup group){
-        register(name, new BlockItem(block, new Item.Settings().group(group)));
+    /**
+     * Registers the given {@link Block} in the appropriate {@link Registry}
+     * @param name The name of the {@link Block}
+     * @param block The {@link Block}
+     * @param group The {@link ItemGroup} used when registering the {@link BlockItem}
+     */
+    public void registerBlock(String name, Block block, ItemGroup group){
+        registerItem(name, new BlockItem(block, new Item.Settings().group(group)));
         Registry.BLOCK.add(makeId(name), block);
     }
 
-    public void register(String name, BlockEntityType<?> type){
+    /**
+     * Registers the given {@link BlockEntityType} in the appropriate {@link Registry}
+     * @param name The name of the {@link BlockEntityType}
+     * @param type The {@link BlockEntityType}
+     */
+    public void registerBlockEntity(String name, BlockEntityType<?> type){
         Registry.register(Registry.BLOCK_ENTITY, makeId(name), type);
     }
 }

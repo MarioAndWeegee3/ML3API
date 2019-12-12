@@ -1,0 +1,10 @@
+{
+    "required":true,
+    "package":"marioandweegee3.ml3api.mixin",
+    "mixins":[
+        "RecipeRemainderMixin"
+    ],
+    "injectors":{
+        "defaultRequire":1
+    }
+}
