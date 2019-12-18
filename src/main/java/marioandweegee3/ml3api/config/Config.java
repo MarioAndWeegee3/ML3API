@@ -4,6 +4,7 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
@@ -25,6 +26,10 @@ public final class Config implements JsonSerializer<Config>, JsonDeserializer<Co
      */
     private Config() {
         properties = new HashMap<>();
+    }
+
+    public static Config empty(){
+        return new Config();
     }
 
     /**
@@ -60,7 +65,7 @@ public final class Config implements JsonSerializer<Config>, JsonDeserializer<Co
         Object object = properties.get(key);
         if(object instanceof Map){
             Map<String, Object> map = (Map<String, Object>) object;
-            Builder builder = new Builder();
+            ConfigBuilder builder = new Builder();
             for(String mapKey : map.keySet()){
                 builder = builder.add(mapKey, map.get(mapKey));
             }
@@ -99,6 +104,22 @@ public final class Config implements JsonSerializer<Config>, JsonDeserializer<Co
     }
 
     /**
+     * Checks whether the given key exists
+     * @param key The key you're searching for
+     * @return True if the config contains the key, false if not.
+     */
+    public boolean containsKey(String key) {
+        return properties.containsKey(key);
+    }
+
+    /**
+     * @return a {@link Set} containing all of the keys in this Config
+     */
+    public Set<String> keySet(){
+        return properties.keySet();
+    }
+
+    /**
      * Returns the value at the given key
      * @param key The key in {@link #properties}
      * @return The value in {@link #properties} as an Integer, or null if it is null
@@ -112,6 +133,11 @@ public final class Config implements JsonSerializer<Config>, JsonDeserializer<Co
         }
     }
 
+    /**
+     * Returns the value at the given key
+     * @param key The key in {@link #properties}
+     * @return The value in {@link #properties} as a Double, or null if it is null
+     */
     public Double getDouble(String key){
         Number number = get(key, Number.class);
         if(number == null){
@@ -121,14 +147,29 @@ public final class Config implements JsonSerializer<Config>, JsonDeserializer<Co
         }
     }
 
+    /**
+     * Returns the value at the given key
+     * @param key The key in {@link #properties}
+     * @return The value in {@link #properties} as a String, or null if it is null
+     */
     public String getString(String key){
         return get(key, String.class);
     }
 
+    /**
+     * Returns the value at the given key
+     * @param key The key in {@link #properties}
+     * @return The value in {@link #properties} as an Object, or null if it is null
+     */
     public Object getObject(String key){
         return properties.get(key);
     }
 
+    /**
+     * Adds the given Object at the given key
+     * @param key The key
+     * @param val The value
+     */
     public void set(String key, Object val) {
         properties.put(key, val);
     }
@@ -166,20 +207,9 @@ public final class Config implements JsonSerializer<Config>, JsonDeserializer<Co
         return s;
     }
 
-    public static final class Builder {
-        private Config config;
-
-        public Builder(){
-            config = new Config();
-        }
-
-        public Builder add(String key, Object defaultValue){
-            config.properties.put(key, defaultValue);
-            return this;
-        }
-
-        public Config build(){
-            return config;
-        }
-    }
+    /**
+     * @deprecated use {@link ConfigBuilder}
+     */
+    @Deprecated
+    public static final class Builder extends ConfigBuilder{}
 }

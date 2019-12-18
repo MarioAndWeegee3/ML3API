@@ -75,6 +75,32 @@ public final class RegistryHelper {
         }
     }
 
+    @Deprecated
+    public void register(String name, Object object){
+        if(object instanceof Item){
+            registerItem(name, (Item) object);
+        } else if(object instanceof BlockEntityType){
+            registerBlockEntity(name, (BlockEntityType<?>) object);
+        }
+    }
+
+    @Deprecated
+    public void register(String name, Object object, ItemGroup group){
+        if(object instanceof Block) {
+            registerBlock(name, (Block) object, group);
+        }
+    }
+
+    @Deprecated
+    public void registerAll(Map<String, Item> map){
+        registerAllItems(map);
+    }
+
+    @Deprecated
+    public void registerAll(Map<String, Block> map, ItemGroup group) {
+        registerAllBlocks(map, group);
+    }
+
     /**
      * Registers the given {@link Item} in the appropriate {@link Registry}
      * @param name The name of the {@link Item}

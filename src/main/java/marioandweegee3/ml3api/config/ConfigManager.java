@@ -46,7 +46,16 @@ public class ConfigManager {
 
         try {
             JsonReader reader = new JsonReader(new FileReader(file));
-            return LibMain.gson.fromJson(reader, Config.class);
+
+            Config config = LibMain.gson.fromJson(reader, Config.class);
+
+            for(String key : pair.getRight().keySet()){
+                if(!config.containsKey(key)){
+                    config.set(key, pair.getRight().getObject(key));
+                }
+            }
+
+            return config;
         } catch (IOException e) {
             e.printStackTrace();
         }
