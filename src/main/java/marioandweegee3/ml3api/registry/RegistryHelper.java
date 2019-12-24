@@ -1,11 +1,13 @@
 package marioandweegee3.ml3api.registry;
 
 import java.util.Map;
+import java.util.function.Supplier;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -128,5 +130,19 @@ public final class RegistryHelper {
      */
     public void registerBlockEntity(String name, BlockEntityType<?> type){
         Registry.register(Registry.BLOCK_ENTITY, makeId(name), type);
+    }
+
+    /**
+     * Registers a new {@link BlockEntityType} in the appropriate {@link Registry}.
+     * @param <T> A {@link BlockEntity} class
+     * @param name The name of the {@link BlockEntityType}
+     * @param blockEntity A {@link Supplier} that returns a BlockEntity of type T
+     * @param blocks The {@link Block}s that the game will allow to have this {@link BlockEntityType}
+     * @return The created {@link BlockEntityType}
+     */
+    public <T extends BlockEntity> BlockEntityType<T> registerAndCreateBlockEntity(String name, Supplier<T> blockEntity, Block... blocks){
+        BlockEntityType<T> type = BlockEntityType.Builder.create(blockEntity, blocks).build(null);
+        registerBlockEntity(name, type);
+        return type;
     }
 }
